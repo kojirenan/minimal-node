@@ -1,18 +1,18 @@
 import express from 'express';
-import User from './db/db-memory.js';
+import User from './db/db-postgres.js';
 
 const router = express.Router();
 const dbUser = new User();
 
-router.get('/users', (req, res) => {
-    const users = dbUser.list();
+router.get('/users', async (req, res) => {
+    const users = await dbUser.list();
     return res.send(users);
 });
 
-router.post('/users', (req, res) => {
+router.post('/users', async (req, res) => {
     const { id, name, age, email } = req.body;
 
-    dbUser.create({
+    await dbUser.create({
         id,
         name,
         age,
@@ -22,11 +22,11 @@ router.post('/users', (req, res) => {
     return res.status(201).send();
 });
 
-router.put('/users/:id', (req, res) => {
+router.put('/users/:id', async (req, res) => {
     const userId = req.params.id;
     const { id, name, age, email } = req.body;
 
-    dbUser.put(userId, {
+    await dbUser.put(userId, {
         id,
         name,
         age,
@@ -36,10 +36,10 @@ router.put('/users/:id', (req, res) => {
     return res.status(204).send();
 });
 
-router.delete('/users/:id', (req, res) => {
+router.delete('/users/:id', async (req, res) => {
     const userId = req.params.id;
 
-    dbUser.delete(userId);
+    await dbUser.delete(userId);
 
     return res.status(204).send();
 });
